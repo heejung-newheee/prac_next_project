@@ -1,3 +1,5 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
@@ -8,27 +10,33 @@ export default function SignupFormInput() {
     return (
         <Card className="w-[350px]">
             <CardHeader>
-                <CardTitle>Create project</CardTitle>
-                <CardDescription>Deploy your new project in one-click.</CardDescription>
+                <CardTitle>계정을 생성합니다</CardTitle>
+                <CardDescription>필수 정보를 입력해 볼게요.</CardDescription>
             </CardHeader>
             <CardContent>
                 <form>
                     <div className="grid w-full items-center gap-4">
                         <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="name">Name</Label>
-                            <Input id="name" placeholder="Name of your project" />
+                            <Label htmlFor="name">이름</Label>
+                            <Input id="name" placeholder="홍길동" />
                         </div>
                         <div className="flex flex-col space-y-1.5">
-                            <Label htmlFor="framework">Framework</Label>
+                            <Label htmlFor="email">이메일</Label>
+                            <Input id="email" placeholder="example@example.com" />
+                        </div>
+                        <div className="flex flex-col space-y-1.5">
+                            <Label htmlFor="phone">연락처</Label>
+                            <Input id="phone" placeholder="01000000000" />
+                        </div>
+                        <div className="flex flex-col space-y-1.5">
+                            <Label htmlFor="framework">역할</Label>
                             <Select>
                                 <SelectTrigger id="framework">
-                                    <SelectValue placeholder="Select" />
+                                    <SelectValue placeholder="역할을 선택해주세요" />
                                 </SelectTrigger>
                                 <SelectContent position="popper">
-                                    <SelectItem value="next">Next.js</SelectItem>
-                                    <SelectItem value="sveltekit">SvelteKit</SelectItem>
-                                    <SelectItem value="astro">Astro</SelectItem>
-                                    <SelectItem value="nuxt">Nuxt.js</SelectItem>
+                                    <SelectItem value="admin">관리자</SelectItem>
+                                    <SelectItem value="user">일반사용자</SelectItem>
                                 </SelectContent>
                             </Select>
                         </div>
