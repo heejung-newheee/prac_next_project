@@ -5,10 +5,11 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+import { ArrowRight } from 'lucide-react';
 
-export default function SignupFormInput() {
+export default function SignUpForm() {
     return (
-        <Card className="w-[350px]">
+        <Card className="w-[350px] absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
             <CardHeader>
                 <CardTitle>계정을 생성합니다</CardTitle>
                 <CardDescription>필수 정보를 입력해 볼게요.</CardDescription>
@@ -44,8 +45,10 @@ export default function SignupFormInput() {
                 </form>
             </CardContent>
             <CardFooter className="flex justify-between">
-                <Button variant="outline">Cancel</Button>
-                <Button>Deploy</Button>
+                <Button>
+                    다음 단계로
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                </Button>
             </CardFooter>
         </Card>
     );
