@@ -111,7 +111,7 @@ export default function SignUpForm() {
                                             <FormLabel>역할</FormLabel>
                                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                                 <FormControl>
-                                                    <SelectTrigger id="framework">
+                                                    <SelectTrigger>
                                                         <SelectValue placeholder="역할을 선택해주세요" />
                                                     </SelectTrigger>
                                                 </FormControl>
