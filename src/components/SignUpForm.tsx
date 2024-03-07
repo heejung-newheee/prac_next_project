@@ -12,12 +12,14 @@ import { cn } from '@/lib/utils';
 import { registerSchema } from '@/validators/signUp';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { z } from 'zod';
 import { useToast } from './ui/use-toast';
 
 type RegisterInput = z.infer<typeof registerSchema>;
 export default function SignUpForm() {
+    const router = useRouter();
     const [step, setStep] = useState(0);
     const { toast } = useToast();
 
@@ -27,10 +29,17 @@ export default function SignUpForm() {
             name: '',
             email: '',
             phone: '',
-            role: ''
+            role: '',
+            password: '',
+            confirmPassword: ''
         }
     });
-    function onSubmit(values: RegisterInput) {
+    const onSubmit = (values: RegisterInput) => {
+        // TODO Fast Refresh error 왜 떳다안떳다?
+        // https://nextjs.org/docs/messages/fast-refresh-reload
+        // https://stackoverflow.com/questions/75655010/router-refresh-not-refreshing-in-next-13
+        // router.push('/');
+        // router.refresh();
         const { password, confirmPassword } = values;
         if (password !== confirmPassword) {
             toast({
@@ -42,7 +51,24 @@ export default function SignUpForm() {
         }
         alert(JSON.stringify(values, null, 4));
         console.log(values);
-    }
+    };
+    const handleClickNext = () => {
+        form.trigger(['phone', 'email', 'name', 'role']);
+        const phoneState = form.getFieldState('phone');
+        const emailState = form.getFieldState('email');
+        const nameState = form.getFieldState('name');
+        const roleState = form.getFieldState('role');
+
+        if (!phoneState.isDirty || phoneState.invalid) return;
+        if (!emailState.isDirty || emailState.invalid) return;
+        if (!nameState.isDirty || nameState.invalid) return;
+        if (!roleState.isDirty || roleState.invalid) return;
+
+        setStep(1);
+    };
+    const handleClickBack = () => {
+        setStep(0);
+    };
     return (
         <Card className="w-[350px] absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
             <CardHeader>
@@ -64,7 +90,6 @@ export default function SignUpForm() {
                                             <FormControl>
                                                 <Input placeholder="홍길동" {...field} />
                                             </FormControl>
-                                            <FormDescription>실명을 입력해주세요.</FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -80,7 +105,6 @@ export default function SignUpForm() {
                                             <FormControl>
                                                 <Input placeholder="example@example.com" {...field} />
                                             </FormControl>
-                                            <FormDescription>메일 양식에 맞게 입력해주세요.</FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -96,7 +120,6 @@ export default function SignUpForm() {
                                             <FormControl>
                                                 <Input placeholder="01000000000" {...field} />
                                             </FormControl>
-                                            <FormDescription>'-'없이 숫자만 입력해주세요</FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -175,33 +198,11 @@ export default function SignUpForm() {
                 <Button className={cn({ hidden: step === 0 })} type="submit">
                     계정 등록하기
                 </Button>
-                <Button
-                    type="button"
-                    className={cn({ hidden: step === 1 })}
-                    onClick={() => {
-                        form.trigger(['phone', 'email', 'name', 'role']);
-                        const phoneState = form.getFieldState('phone');
-                        const emailState = form.getFieldState('email');
-                        const usernameState = form.getFieldState('name');
-                        const roleState = form.getFieldState('role');
-
-                        if (!phoneState.isDirty || phoneState.invalid) return;
-                        if (!emailState.isDirty || emailState.invalid) return;
-                        if (!usernameState.isDirty || usernameState.invalid) return;
-                        if (!roleState.isDirty || roleState.invalid) return;
-
-                        setStep(1);
-                    }}>
+                <Button type="button" className={cn({ hidden: step === 1 })} onClick={handleClickNext}>
                     다음 단계로
                     <ArrowRight className="w-4 h-4 ml-2" />
                 </Button>
-                <Button
-                    type="button"
-                    variant={'ghost'}
-                    className={cn({ hidden: step === 0 })}
-                    onClick={() => {
-                        setStep(0);
-                    }}>
+                <Button type="button" variant={'ghost'} className={cn({ hidden: step === 0 })} onClick={handleClickBack}>
                     <ArrowLeft className="w-4 h-4 ml-2" />
                     이전 단계로
                 </Button>
