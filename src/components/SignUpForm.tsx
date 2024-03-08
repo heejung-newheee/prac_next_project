@@ -190,7 +190,7 @@ export default function SignUpForm() {
                                 />
                             </div>
                         </motion.div>
-                        <div className="flex justify-between">
+                        <div className="flex justify-between space-y-3">
                             <Button className={cn({ hidden: step === 0 })} type="submit">
                                 계정 등록하기
                             </Button>
