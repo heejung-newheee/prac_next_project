@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -12,14 +12,12 @@ import { cn } from '@/lib/utils';
 import { registerSchema } from '@/validators/signUp';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { z } from 'zod';
 import { useToast } from './ui/use-toast';
 
 type RegisterInput = z.infer<typeof registerSchema>;
 export default function SignUpForm() {
-    const router = useRouter();
     const [step, setStep] = useState(0);
     const { toast } = useToast();
 
@@ -38,10 +36,11 @@ export default function SignUpForm() {
         // TODO Fast Refresh error 왜 떳다안떳다?
         // https://nextjs.org/docs/messages/fast-refresh-reload
         // https://stackoverflow.com/questions/75655010/router-refresh-not-refreshing-in-next-13
-        // router.push('/');
-        // router.refresh();
+
         const { password, confirmPassword } = values;
         if (password !== confirmPassword) {
+            console.log('no');
+            console.log(password, confirmPassword);
             toast({
                 title: '비밀번호가 일치하지 않습니다.',
                 variant: 'destructive',
@@ -49,8 +48,8 @@ export default function SignUpForm() {
             });
             return;
         }
+        console.log('onSubmit called', values);
         alert(JSON.stringify(values, null, 4));
-        console.log(values);
     };
     const handleClickNext = () => {
         form.trigger(['phone', 'email', 'name', 'role']);
@@ -191,22 +190,22 @@ export default function SignUpForm() {
                                 />
                             </div>
                         </motion.div>
+                        <div className="flex justify-between">
+                            <Button className={cn({ hidden: step === 0 })} type="submit">
+                                계정 등록하기
+                            </Button>
+                            <Button type="button" className={cn({ hidden: step === 1 })} onClick={handleClickNext}>
+                                다음 단계로
+                                <ArrowRight className="w-4 h-4 ml-2" />
+                            </Button>
+                            <Button type="button" variant={'ghost'} className={cn({ hidden: step === 0 })} onClick={handleClickBack}>
+                                <ArrowLeft className="w-4 h-4 ml-2" />
+                                이전 단계로
+                            </Button>
+                        </div>
                     </form>
                 </Form>
             </CardContent>
-            <CardFooter className="flex justify-between">
-                <Button className={cn({ hidden: step === 0 })} type="submit">
-                    계정 등록하기
-                </Button>
-                <Button type="button" className={cn({ hidden: step === 1 })} onClick={handleClickNext}>
-                    다음 단계로
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-                <Button type="button" variant={'ghost'} className={cn({ hidden: step === 0 })} onClick={handleClickBack}>
-                    <ArrowLeft className="w-4 h-4 ml-2" />
-                    이전 단계로
-                </Button>
-            </CardFooter>
         </Card>
     );
 }
