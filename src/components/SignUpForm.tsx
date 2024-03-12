@@ -12,7 +12,7 @@ import { cn } from '@/lib/utils';
 import { registerSchema } from '@/validators/signUp';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { z } from 'zod';
 import { useToast } from './ui/use-toast';
 
@@ -20,6 +20,7 @@ type RegisterInput = z.infer<typeof registerSchema>;
 export default function SignUpForm() {
     const [step, setStep] = useState(0);
     const { toast } = useToast();
+    const pwFocusRef = useRef<HTMLInputElement>(null);
 
     const form = useForm<RegisterInput>({
         resolver: zodResolver(registerSchema),
@@ -41,11 +42,14 @@ export default function SignUpForm() {
         if (password !== confirmPassword) {
             console.log('no');
             console.log(password, confirmPassword);
-            toast({
-                title: '비밀번호가 일치하지 않습니다.',
-                variant: 'destructive',
-                duration: 1000
-            });
+            // toast({
+            //     title: '비밀번호가 일치하지 않습니다.',
+            //     variant: 'destructive',
+            //     duration: 1000
+            // });
+            // return;
+            alert('비밀번호가 일치하지 않습니다.');
+            pwFocusRef.current && pwFocusRef.current.focus();
             return;
         }
         console.log('onSubmit called', values);
@@ -69,16 +73,16 @@ export default function SignUpForm() {
         setStep(0);
     };
     return (
-        <Card className="w-[350px] absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+        <Card className="w-[380px] absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
             <CardHeader>
                 <CardTitle>회원가입</CardTitle>
                 <CardDescription>필수 정보를 입력해 볼게요.</CardDescription>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="relative space-y-3 overflow-x-hidden">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="relative space-y-3 overflow-x-hidden p-6">
                         {/* step 1 */}
-                        <motion.div className={cn('space-y-3')} animate={{ translateX: `${step * -100}%` }} transition={{ ease: 'easeInOut' }}>
+                        <motion.div className={cn('space-y-3')} animate={{ translateX: `${step * -120}%` }} transition={{ ease: 'easeInOut' }}>
                             <div className="flex flex-col space-y-1.5">
                                 <FormField
                                     control={form.control}
@@ -165,7 +169,7 @@ export default function SignUpForm() {
                                         <FormItem>
                                             <FormLabel>비밀번호</FormLabel>
                                             <FormControl>
-                                                <Input type={'password'} {...field} />
+                                                <Input type={'password'} {...field} ref={pwFocusRef} />
                                             </FormControl>
                                             <FormDescription>최소 6자리 이상, 영문, 숫자, 특수문자를 포함</FormDescription>
                                             <FormMessage />
@@ -190,8 +194,8 @@ export default function SignUpForm() {
                                 />
                             </div>
                         </motion.div>
-                        <div className="flex justify-between space-y-3">
-                            <Button className={cn({ hidden: step === 0 })} type="submit">
+                        <div className="flex justify-between ">
+                            <Button type="submit" className={cn({ hidden: step === 0 })}>
                                 계정 등록하기
                             </Button>
                             <Button type="button" className={cn({ hidden: step === 1 })} onClick={handleClickNext}>

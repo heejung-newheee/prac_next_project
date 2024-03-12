@@ -1,6 +1,5 @@
 import { ThemeProvider } from '@/components/ThemeProvider';
 import ModeToggle from '@/components/common/ModeToggle';
-import Toaster from '@/components/ui/toaster';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
@@ -23,7 +22,7 @@ export default function RootLayout({
                 <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
                     <ModeToggle />
                     {children}
-                    <Toaster />
+                    {/* <Toaster /> */}
                 </ThemeProvider>
             </body>
         </html>
