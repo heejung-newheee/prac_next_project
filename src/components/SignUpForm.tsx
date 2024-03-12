@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
@@ -12,16 +12,15 @@ import { cn } from '@/lib/utils';
 import { registerSchema } from '@/validators/signUp';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { z } from 'zod';
 import { useToast } from './ui/use-toast';
 
 type RegisterInput = z.infer<typeof registerSchema>;
 export default function SignUpForm() {
-    const router = useRouter();
     const [step, setStep] = useState(0);
     const { toast } = useToast();
+    const pwFocusRef = useRef<HTMLInputElement>(null);
 
     const form = useForm<RegisterInput>({
         resolver: zodResolver(registerSchema),
@@ -38,19 +37,23 @@ export default function SignUpForm() {
         // TODO Fast Refresh error 왜 떳다안떳다?
         // https://nextjs.org/docs/messages/fast-refresh-reload
         // https://stackoverflow.com/questions/75655010/router-refresh-not-refreshing-in-next-13
-        // router.push('/');
-        // router.refresh();
+
         const { password, confirmPassword } = values;
         if (password !== confirmPassword) {
-            toast({
-                title: '비밀번호가 일치하지 않습니다.',
-                variant: 'destructive',
-                duration: 1000
-            });
+            console.log('no');
+            console.log(password, confirmPassword);
+            // toast({
+            //     title: '비밀번호가 일치하지 않습니다.',
+            //     variant: 'destructive',
+            //     duration: 1000
+            // });
+            // return;
+            alert('비밀번호가 일치하지 않습니다.');
+            pwFocusRef.current && pwFocusRef.current.focus();
             return;
         }
+        console.log('onSubmit called', values);
         alert(JSON.stringify(values, null, 4));
-        console.log(values);
     };
     const handleClickNext = () => {
         form.trigger(['phone', 'email', 'name', 'role']);
@@ -70,16 +73,16 @@ export default function SignUpForm() {
         setStep(0);
     };
     return (
-        <Card className="w-[350px] absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+        <Card className="w-[380px] absolute -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
             <CardHeader>
                 <CardTitle>회원가입</CardTitle>
                 <CardDescription>필수 정보를 입력해 볼게요.</CardDescription>
             </CardHeader>
             <CardContent>
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="relative space-y-3 overflow-x-hidden">
+                    <form onSubmit={form.handleSubmit(onSubmit)} className="relative space-y-3 overflow-x-hidden p-6">
                         {/* step 1 */}
-                        <motion.div className={cn('space-y-3')} animate={{ translateX: `${step * -100}%` }} transition={{ ease: 'easeInOut' }}>
+                        <motion.div className={cn('space-y-3')} animate={{ translateX: `${step * -120}%` }} transition={{ ease: 'easeInOut' }}>
                             <div className="flex flex-col space-y-1.5">
                                 <FormField
                                     control={form.control}
@@ -166,7 +169,7 @@ export default function SignUpForm() {
                                         <FormItem>
                                             <FormLabel>비밀번호</FormLabel>
                                             <FormControl>
-                                                <Input type={'password'} {...field} />
+                                                <Input type={'password'} {...field} ref={pwFocusRef} />
                                             </FormControl>
                                             <FormDescription>최소 6자리 이상, 영문, 숫자, 특수문자를 포함</FormDescription>
                                             <FormMessage />
@@ -191,22 +194,22 @@ export default function SignUpForm() {
                                 />
                             </div>
                         </motion.div>
+                        <div className="flex justify-between ">
+                            <Button type="submit" className={cn({ hidden: step === 0 })}>
+                                계정 등록하기
+                            </Button>
+                            <Button type="button" className={cn({ hidden: step === 1 })} onClick={handleClickNext}>
+                                다음 단계로
+                                <ArrowRight className="w-4 h-4 ml-2" />
+                            </Button>
+                            <Button type="button" variant={'ghost'} className={cn({ hidden: step === 0 })} onClick={handleClickBack}>
+                                <ArrowLeft className="w-4 h-4 ml-2" />
+                                이전 단계로
+                            </Button>
+                        </div>
                     </form>
                 </Form>
             </CardContent>
-            <CardFooter className="flex justify-between">
-                <Button className={cn({ hidden: step === 0 })} type="submit">
-                    계정 등록하기
-                </Button>
-                <Button type="button" className={cn({ hidden: step === 1 })} onClick={handleClickNext}>
-                    다음 단계로
-                    <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
-                <Button type="button" variant={'ghost'} className={cn({ hidden: step === 0 })} onClick={handleClickBack}>
-                    <ArrowLeft className="w-4 h-4 ml-2" />
-                    이전 단계로
-                </Button>
-            </CardFooter>
         </Card>
     );
 }
