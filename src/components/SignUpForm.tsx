@@ -8,11 +8,12 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 
+import { supabase } from '@/lib/supabase/supabase';
 import { cn } from '@/lib/utils';
 import { registerSchema } from '@/validators/signUp';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 import { useToast } from './ui/use-toast';
 
@@ -33,12 +34,26 @@ export default function SignUpForm() {
             confirmPassword: ''
         }
     });
-    const onSubmit = (values: RegisterInput) => {
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const { data, error } = await supabase.from('users').select();
+                if (error) throw new Error();
+                console.log(data);
+                return data;
+            } catch (err) {
+                alert('데이터를 불러오지 못했습니다');
+                return null;
+            }
+        };
+        loadData();
+    });
+    const onSubmit = async (values: RegisterInput) => {
         // TODO Fast Refresh error 왜 떳다안떳다?
         // https://nextjs.org/docs/messages/fast-refresh-reload
         // https://stackoverflow.com/questions/75655010/router-refresh-not-refreshing-in-next-13
 
-        const { password, confirmPassword } = values;
+        const { name, email, phone, role, password, confirmPassword } = values;
         if (password !== confirmPassword) {
             console.log('no');
             console.log(password, confirmPassword);
@@ -54,6 +69,18 @@ export default function SignUpForm() {
         }
         console.log('onSubmit called', values);
         alert(JSON.stringify(values, null, 4));
+
+        const { data, error } = await supabase.auth.signUp({
+            email,
+            password,
+            options: {
+                data: {
+                    name,
+                    phone,
+                    role
+                }
+            }
+        });
     };
     const handleClickNext = () => {
         form.trigger(['phone', 'email', 'name', 'role']);
