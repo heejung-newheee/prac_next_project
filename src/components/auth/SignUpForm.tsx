@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useForm } from 'react-hook-form';
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 
 import { supabase } from '@/lib/supabase/supabase';
 import { cn } from '@/lib/utils';
@@ -15,7 +15,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
-import { useToast } from './ui/use-toast';
+import { useToast } from '../ui/use-toast';
 
 type RegisterInput = z.infer<typeof registerSchema>;
 export default function SignUpForm() {

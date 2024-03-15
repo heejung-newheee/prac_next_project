@@ -1,7 +1,9 @@
-export default function Home() {
+import SignUpForm from '@/components/auth/SignUpForm';
+
+export default function page() {
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
-            <div>메인입니다</div>
+            <SignUpForm />
         </main>
     );
 }
