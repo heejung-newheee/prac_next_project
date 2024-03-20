@@ -8,17 +8,19 @@ import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 
-import { supabase } from '@/lib/supabase/supabase';
+import { signUpUser } from '@/app/api/auth';
+import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
 import { registerSchema } from '@/validators/signUp';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { z } from 'zod';
 import { useToast } from '../ui/use-toast';
+export type RegisterInput = z.infer<typeof registerSchema>;
 
-type RegisterInput = z.infer<typeof registerSchema>;
 export default function SignUpForm() {
+    const supabase = createClient();
     const [step, setStep] = useState(0);
     const { toast } = useToast();
     const pwFocusRef = useRef<HTMLInputElement>(null);
@@ -34,28 +36,10 @@ export default function SignUpForm() {
             confirmPassword: ''
         }
     });
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                const { data, error } = await supabase.from('users').select();
-                if (error) throw new Error();
-                console.log(data);
-                return data;
-            } catch (err) {
-                alert('데이터를 불러오지 못했습니다');
-                return null;
-            }
-        };
-        loadData();
-    });
-    const onSubmit = async (values: RegisterInput) => {
-        // TODO Fast Refresh error 왜 떳다안떳다?
-        // https://nextjs.org/docs/messages/fast-refresh-reload
-        // https://stackoverflow.com/questions/75655010/router-refresh-not-refreshing-in-next-13
 
+    const onSubmit = async (values: RegisterInput) => {
         const { name, email, phone, role, password, confirmPassword } = values;
         if (password !== confirmPassword) {
-            console.log('no');
             console.log(password, confirmPassword);
             // toast({
             //     title: '비밀번호가 일치하지 않습니다.',
@@ -69,18 +53,7 @@ export default function SignUpForm() {
         }
         console.log('onSubmit called', values);
         alert(JSON.stringify(values, null, 4));
-
-        const { data, error } = await supabase.auth.signUp({
-            email,
-            password,
-            options: {
-                data: {
-                    name,
-                    phone,
-                    role
-                }
-            }
-        });
+        signUpUser(values);
     };
     const handleClickNext = () => {
         form.trigger(['phone', 'email', 'name', 'role']);
@@ -109,7 +82,10 @@ export default function SignUpForm() {
                 <Form {...form}>
                     <form onSubmit={form.handleSubmit(onSubmit)} className="relative space-y-3 overflow-x-hidden p-6">
                         {/* step 1 */}
-                        <motion.div className={cn('space-y-3')} animate={{ translateX: `${step * -120}%` }} transition={{ ease: 'easeInOut' }}>
+                        <motion.div
+                            className={cn('space-y-3')}
+                            animate={{ translateX: `${step * -120}%` }}
+                            transition={{ ease: 'easeInOut' }}>
                             <div className="flex flex-col space-y-1.5">
                                 <FormField
                                     control={form.control}
@@ -198,7 +174,9 @@ export default function SignUpForm() {
                                             <FormControl>
                                                 <Input type={'password'} {...field} ref={pwFocusRef} />
                                             </FormControl>
-                                            <FormDescription>최소 6자리 이상, 영문, 숫자, 특수문자를 포함</FormDescription>
+                                            <FormDescription>
+                                                최소 6자리 이상, 영문, 숫자, 특수문자를 포함
+                                            </FormDescription>
                                             <FormMessage />
                                         </FormItem>
                                     )}
@@ -229,7 +207,11 @@ export default function SignUpForm() {
                                 다음 단계로
                                 <ArrowRight className="w-4 h-4 ml-2" />
                             </Button>
-                            <Button type="button" variant={'ghost'} className={cn({ hidden: step === 0 })} onClick={handleClickBack}>
+                            <Button
+                                type="button"
+                                variant={'ghost'}
+                                className={cn({ hidden: step === 0 })}
+                                onClick={handleClickBack}>
                                 <ArrowLeft className="w-4 h-4 ml-2" />
                                 이전 단계로
                             </Button>

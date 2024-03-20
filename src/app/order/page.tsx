@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 
-export default function page() {
+export default function Order() {
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
             <h2>주문 페이지</h2>
@@ -20,7 +20,6 @@ export default function page() {
                         <p>가격</p>
                     </div>
                 </div>
-
                 <CardContent></CardContent>
             </Card>
             {/* 주문자 정보 */}
