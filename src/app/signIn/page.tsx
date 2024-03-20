@@ -9,7 +9,7 @@ export default function SignIn() {
     const {
         register,
         handleSubmit,
-        formState: { isSubmitting }
+        formState: { isSubmitting, errors }
     } = useForm();
 
     return (
@@ -29,13 +29,33 @@ export default function SignIn() {
                             <div className="grid w-full items-center gap-4">
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="email">이메일</Label>
-                                    <Input id="email" type="email" placeholder="example@example.com" {...register('email')} />
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        placeholder="example@example.com"
+                                        {...register('email', {
+                                            // 필수입력
+                                            required: '이메일은 필수 입력입니다.',
+                                            // 특정형식을 이용해서 정규식 검증 가능
+                                            pattern: {
+                                                value: /\S+@\S+\.\S+/,
+                                                message: '형식이 올바르지 않습니다'
+                                            }
+                                        })}
+                                    />
+                                    {/* <small>{errors.email.message}</small> */}
                                 </div>
                             </div>
+
                             <div className="grid w-full items-center gap-4">
                                 <div className="flex flex-col space-y-1.5">
                                     <Label htmlFor="email">비밀번호</Label>
-                                    <Input id="password" type="password" placeholder="******" {...register('password')} />
+                                    <Input
+                                        id="password"
+                                        type="password"
+                                        placeholder="******"
+                                        {...register('password')}
+                                    />
                                 </div>
                             </div>
                         </div>
