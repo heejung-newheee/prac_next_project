@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 import { registerSchema } from '@/validators/signUp';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 import { z } from 'zod';
 import { useToast } from '../ui/use-toast';
 export type RegisterInput = z.infer<typeof registerSchema>;
@@ -36,20 +36,7 @@ export default function SignUpForm() {
             confirmPassword: ''
         }
     });
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                const { data: users, error } = await supabase.from('users').select();
-                if (error) throw new Error();
-                console.log('ee', users);
-                return users;
-            } catch (err) {
-                console.log('데이터를 불러오지 못했습니다', err);
-                return null;
-            }
-        };
-        loadData();
-    });
+
     const onSubmit = async (values: RegisterInput) => {
         const { name, email, phone, role, password, confirmPassword } = values;
         if (password !== confirmPassword) {

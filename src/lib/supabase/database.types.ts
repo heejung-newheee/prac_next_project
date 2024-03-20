@@ -7,25 +7,25 @@ export type Database = {
                 Row: {
                     created_at: string;
                     email: string | null;
-                    id: number;
+                    id: string;
                     name: string | null;
-                    phone: number | null;
+                    phone: string | null;
                     role: string | null;
                 };
                 Insert: {
                     created_at?: string;
                     email?: string | null;
-                    id?: number;
+                    id?: string;
                     name?: string | null;
-                    phone?: number | null;
+                    phone?: string | null;
                     role?: string | null;
                 };
                 Update: {
                     created_at?: string;
                     email?: string | null;
-                    id?: number;
+                    id?: string;
                     name?: string | null;
-                    phone?: number | null;
+                    phone?: string | null;
                     role?: string | null;
                 };
                 Relationships: [
