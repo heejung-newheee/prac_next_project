@@ -14,30 +14,18 @@ import { cn } from '@/lib/utils';
 import { registerSchema } from '@/validators/signUp';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { useEffect, useRef, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useRef, useState } from 'react';
 import { z } from 'zod';
 import { useToast } from '../ui/use-toast';
 export type RegisterInput = z.infer<typeof registerSchema>;
 
 export default function SignUpForm() {
+    const router = useRouter();
     const supabase = createClient();
     const [step, setStep] = useState(0);
     const { toast } = useToast();
     const pwFocusRef = useRef<HTMLInputElement>(null);
-    useEffect(() => {
-        const loadData = async () => {
-            try {
-                const { data: users, error } = await supabase.from('users').select();
-                if (error) throw new Error();
-                console.log('ee', users);
-                return users;
-            } catch (err) {
-                console.log('데이터를 불러오지 못했습니다', err);
-                return null;
-            }
-        };
-        loadData();
-    });
     const form = useForm<RegisterInput>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
@@ -65,7 +53,8 @@ export default function SignUpForm() {
         }
         console.log('onSubmit called', values);
         signUpUser(values);
-        alert(JSON.stringify(values, null, 4));
+        alert('회원가입이 완료되었습니다.');
+        router.push('/');
     };
     const handleClickNext = () => {
         form.trigger(['phone', 'email', 'name', 'role']);

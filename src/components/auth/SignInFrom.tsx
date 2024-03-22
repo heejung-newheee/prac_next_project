@@ -22,7 +22,6 @@ export default function SignInFrom() {
     });
     const onSubmit = async (values: RegisterInput) => {
         console.log('dd');
-        const { name, email, phone, role, password, confirmPassword } = values;
         try {
             await signInUser(values);
             router.push('/');
@@ -30,7 +29,7 @@ export default function SignInFrom() {
             console.log('onSubmit called', values);
         } catch (error) {
             if (error instanceof Error) console.error(error.message);
-            alert('비밀번호가 일치하지 않습니다.');
+            alert('계정정보를 확인해 주세요');
         }
     };
     return (
