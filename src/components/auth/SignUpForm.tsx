@@ -14,17 +14,18 @@ import { cn } from '@/lib/utils';
 import { registerSchema } from '@/validators/signUp';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
+import { useRouter } from 'next/navigation';
 import { useRef, useState } from 'react';
 import { z } from 'zod';
 import { useToast } from '../ui/use-toast';
 export type RegisterInput = z.infer<typeof registerSchema>;
 
 export default function SignUpForm() {
+    const router = useRouter();
     const supabase = createClient();
     const [step, setStep] = useState(0);
     const { toast } = useToast();
     const pwFocusRef = useRef<HTMLInputElement>(null);
-
     const form = useForm<RegisterInput>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
@@ -40,7 +41,6 @@ export default function SignUpForm() {
     const onSubmit = async (values: RegisterInput) => {
         const { name, email, phone, role, password, confirmPassword } = values;
         if (password !== confirmPassword) {
-            console.log(password, confirmPassword);
             // toast({
             //     title: '비밀번호가 일치하지 않습니다.',
             //     variant: 'destructive',
@@ -52,8 +52,9 @@ export default function SignUpForm() {
             return;
         }
         console.log('onSubmit called', values);
-        alert(JSON.stringify(values, null, 4));
         signUpUser(values);
+        alert('회원가입이 완료되었습니다.');
+        router.push('/');
     };
     const handleClickNext = () => {
         form.trigger(['phone', 'email', 'name', 'role']);

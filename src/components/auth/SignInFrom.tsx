@@ -2,14 +2,17 @@
 import { signInUser } from '@/app/api/auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { Form } from '@/components/ui/form';
 import { registerSchema } from '@/validators/signUp';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Form, useForm } from 'react-hook-form';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
 import { FormControl, FormField, FormItem, FormLabel } from '../ui/form';
+import { Input } from '../ui/input';
 import { RegisterInput } from './SignUpForm';
 
 export default function SignInFrom() {
+    const router = useRouter();
     const form = useForm<RegisterInput>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
@@ -18,11 +21,16 @@ export default function SignInFrom() {
         }
     });
     const onSubmit = async (values: RegisterInput) => {
-        const { name, email, phone, role, password, confirmPassword } = values;
-
-        console.log('onSubmit called', values);
-        alert(JSON.stringify(values, null, 4));
-        signInUser(values);
+        console.log('dd');
+        try {
+            await signInUser(values);
+            router.push('/');
+            router.refresh();
+            console.log('onSubmit called', values);
+        } catch (error) {
+            if (error instanceof Error) console.error(error.message);
+            alert('계정정보를 확인해 주세요');
+        }
     };
     return (
         <Card className="w-[350px]">
@@ -65,8 +73,10 @@ export default function SignInFrom() {
                         </div>
                         <br />
                         <div className="flex justify-between">
-                            <Button variant="ghost">회원가입</Button>
                             <Button type="submit">로그인</Button>
+                            <Button type="button" variant="ghost" onClick={() => router.push('/signUp')}>
+                                회원가입
+                            </Button>
                         </div>
                     </form>
                 </Form>
