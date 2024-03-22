@@ -14,7 +14,7 @@ import { cn } from '@/lib/utils';
 import { registerSchema } from '@/validators/signUp';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { motion } from 'framer-motion';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { z } from 'zod';
 import { useToast } from '../ui/use-toast';
 export type RegisterInput = z.infer<typeof registerSchema>;
@@ -24,7 +24,20 @@ export default function SignUpForm() {
     const [step, setStep] = useState(0);
     const { toast } = useToast();
     const pwFocusRef = useRef<HTMLInputElement>(null);
-
+    useEffect(() => {
+        const loadData = async () => {
+            try {
+                const { data: users, error } = await supabase.from('users').select();
+                if (error) throw new Error();
+                console.log('ee', users);
+                return users;
+            } catch (err) {
+                console.log('데이터를 불러오지 못했습니다', err);
+                return null;
+            }
+        };
+        loadData();
+    });
     const form = useForm<RegisterInput>({
         resolver: zodResolver(registerSchema),
         defaultValues: {
@@ -40,7 +53,6 @@ export default function SignUpForm() {
     const onSubmit = async (values: RegisterInput) => {
         const { name, email, phone, role, password, confirmPassword } = values;
         if (password !== confirmPassword) {
-            console.log(password, confirmPassword);
             // toast({
             //     title: '비밀번호가 일치하지 않습니다.',
             //     variant: 'destructive',
@@ -52,8 +64,8 @@ export default function SignUpForm() {
             return;
         }
         console.log('onSubmit called', values);
-        alert(JSON.stringify(values, null, 4));
         signUpUser(values);
+        alert(JSON.stringify(values, null, 4));
     };
     const handleClickNext = () => {
         form.trigger(['phone', 'email', 'name', 'role']);
