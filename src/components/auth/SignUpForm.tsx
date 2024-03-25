@@ -56,6 +56,7 @@ export default function SignUpForm() {
         alert('회원가입이 완료되었습니다.');
         router.push('/');
     };
+
     const handleClickNext = () => {
         form.trigger(['phone', 'email', 'name', 'role']);
         const phoneState = form.getFieldState('phone');

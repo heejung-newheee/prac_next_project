@@ -3,12 +3,42 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
     public: {
         Tables: {
+            products: {
+                Row: {
+                    category: string | null;
+                    created_at: string;
+                    description: string | null;
+                    id: string;
+                    images: string[] | null;
+                    price: number | null;
+                    product_name: string | null;
+                };
+                Insert: {
+                    category?: string | null;
+                    created_at?: string;
+                    description?: string | null;
+                    id?: string;
+                    images?: string[] | null;
+                    price?: number | null;
+                    product_name?: string | null;
+                };
+                Update: {
+                    category?: string | null;
+                    created_at?: string;
+                    description?: string | null;
+                    id?: string;
+                    images?: string[] | null;
+                    price?: number | null;
+                    product_name?: string | null;
+                };
+                Relationships: [];
+            };
             users: {
                 Row: {
                     created_at: string;
                     email: string | null;
                     id: string | null;
-                    name: string | null;
+                    name: string;
                     phone: string | null;
                     role: string | null;
                 };
@@ -16,7 +46,7 @@ export type Database = {
                     created_at?: string;
                     email?: string | null;
                     id?: string | null;
-                    name: string | null;
+                    name: string;
                     phone?: string | null;
                     role?: string | null;
                 };
@@ -24,7 +54,7 @@ export type Database = {
                     created_at?: string;
                     email?: string | null;
                     id?: string | null;
-                    name?: string | null;
+                    name?: string;
                     phone?: string | null;
                     role?: string | null;
                 };
@@ -121,3 +151,4 @@ export type Enums<
     : never;
 
 export type UserUpdateType = Database['public']['Tables']['users']['Insert'];
+export type ProductType = Database['public']['Tables']['products']['Row'];
