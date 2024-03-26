@@ -2,13 +2,12 @@
 import { signInUser } from '@/app/api/auth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Form } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import { registerSchema } from '@/validators/signUp';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { useForm } from 'react-hook-form';
-import { FormControl, FormField, FormItem, FormLabel } from '../ui/form';
-import { Input } from '../ui/input';
+import { Form, FormControl, FormField, FormItem, FormLabel } from '../ui/form';
 import { RegisterInput } from './SignUpForm';
 
 export default function SignInFrom() {
