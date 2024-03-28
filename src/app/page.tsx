@@ -16,7 +16,6 @@ export default function Home() {
         try {
             const { data: productsData, error } = await supabase.from('products').select();
             if (error) throw new Error();
-            console.log('Products data:', productsData);
             setProducts(productsData); // 상태 변수에 데이터를 설정합니다.
         } catch (err) {
             console.log('데이터를 불러오지 못했습니다', err);
