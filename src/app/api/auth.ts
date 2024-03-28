@@ -1,3 +1,4 @@
+import { SigninRegisterInput } from '@/components/auth/SignInFrom';
 import { RegisterInput } from '@/components/auth/SignUpForm';
 import { UserUpdateType } from '@/lib/supabase/database.types';
 import { supabase } from '@/lib/supabase/supabase';
@@ -35,10 +36,8 @@ export const userUpdate = async (user: UserUpdateType) => {
     if (error !== null) throw new Error(error.message);
 };
 
-export const signInUser = async (values: RegisterInput) => {
-    const { data, error } = await supabase.auth.signInWithPassword({
-        email: values.email,
-        password: values.password
-    });
+export const signInUser = async (values: SigninRegisterInput) => {
+    const { data, error } = await supabase.auth.signInWithPassword(values);
+    console.log('로그인');
     if (error !== null) throw new Error(error.message);
 };
