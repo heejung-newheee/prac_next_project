@@ -9,7 +9,6 @@ import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '../ui/form';
 
 import { signUpUser } from '@/app/api/auth';
-import { createClient } from '@/lib/supabase/client';
 import { cn } from '@/lib/utils';
 import { registerSchema } from '@/validators/signUp';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -22,7 +21,6 @@ export type RegisterInput = z.infer<typeof registerSchema>;
 
 export default function SignUpForm() {
     const router = useRouter();
-    const supabase = createClient();
     const [step, setStep] = useState(0);
     const { toast } = useToast();
     const pwFocusRef = useRef<HTMLInputElement>(null);
@@ -39,7 +37,7 @@ export default function SignUpForm() {
     });
 
     const onSubmit = async (values: RegisterInput) => {
-        const { name, email, phone, role, password, confirmPassword } = values;
+        const { password, confirmPassword } = values;
         if (password !== confirmPassword) {
             // toast({
             //     title: '비밀번호가 일치하지 않습니다.',
