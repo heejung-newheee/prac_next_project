@@ -6,12 +6,20 @@ import { Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
 
 import { ProductType } from '@/lib/supabase/database.types';
 import Image from 'next/image';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
-
-export default function ProductDetail(props: any) {
+interface ProductDetailProps {
+    params: {
+        id: string;
+    };
+}
+export default function ProductDetail(props: ProductDetailProps) {
+    const router = useRouter();
     const [productData, setProductData] = useState<ProductType>();
 
     useEffect(() => {
+        console.log(props);
         const fetchData = async () => {
             try {
                 const data = await productInfo(props.params.id);
@@ -22,7 +30,9 @@ export default function ProductDetail(props: any) {
         };
         fetchData();
     }, [props.params.id]); // props.params.id가 변경될 때마다 다시 호출
-
+    const onClickBuy = (id: string) => {
+        router.push(`/order`);
+    };
     console.log(productData);
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
@@ -61,7 +71,21 @@ export default function ProductDetail(props: any) {
                         </div>
                         <div className="flex pt-3 gap-2">
                             <Button variant="outline">장바구니</Button>
-                            <Button>구매하기</Button>
+                            <Button>
+                                <Link
+                                    href={{
+                                        pathname: '/order',
+                                        query: {
+                                            category: productData.category,
+                                            id: productData.id,
+                                            images: productData.images,
+                                            price: productData.price,
+                                            product_name: productData.product_name
+                                        }
+                                    }}>
+                                    구매하기
+                                </Link>
+                            </Button>
                         </div>
                     </div>
                 </div>

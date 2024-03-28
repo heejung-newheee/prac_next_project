@@ -46,10 +46,6 @@ export const signInUser = async ({ email, password }: { email: string; password:
 export const signOut = async () => {
     await supabase.auth.signOut();
 };
-// export const getUser = async (email: string | undefined) => {
-//     const { data } = await supabase.from('users').select().eq('email', email).single();
-//     return data;
-// };
 
 export const getAuthSession = async () => {
     const {
@@ -60,16 +56,25 @@ export const getAuthSession = async () => {
         console.log('로그인 상태가 아님');
     }
     if (session) {
-        console.log(session?.user.email as string);
-        console.log(session?.user.id as string);
+        console.log('데이터', session, '에러', error);
     }
-    console.log('데이터', session, '에러', error);
+
     return session;
 };
-
-export const getUser = async () => {
-    // const {
-    //     data: { user }
-    // } = await supabase.auth.getUser();
-    // return user;
+export const getUser = async (email: string) => {
+    const { data } = await supabase.from('users').select().eq('email', email).single();
+    return data;
 };
+
+// export const getUser = async (session: Session | null) => {
+//     try {
+//         if (session) {
+//             const {
+//                 data: { user }
+//             } = await supabase.auth.getUser(session.user.email);
+//             return user;
+//         }
+//     } catch (error) {
+//         console.error(error);
+//     }
+// };
