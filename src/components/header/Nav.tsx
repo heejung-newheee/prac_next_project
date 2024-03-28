@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 
+import { getAuthSession, signOut } from '@/app/api/auth';
 import {
     NavigationMenu,
     NavigationMenuItem,
@@ -9,6 +10,9 @@ import {
     NavigationMenuList,
     navigationMenuTriggerStyle
 } from '@/components/ui/navigation-menu';
+import type { Session } from '@supabase/auth-helpers-nextjs';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 
 // const components: { title: string; href: string; description: string }[] = [
 //     {
@@ -23,31 +27,73 @@ import {
 //     }
 // ];
 export default function Nav() {
+    const router = useRouter();
+    const [session, setSession] = useState<Session | null>(null);
+    const [isLogin, setIsLogin] = useState<boolean>(false);
+    const [isAdmin, setIsAdmin] = useState<boolean | string>(false);
+
+    useEffect(() => {
+        const fetchSession = async () => {
+            try {
+                const sessionData = await getAuthSession();
+                if (sessionData) {
+                    setSession(sessionData);
+                    setIsLogin(true);
+                    setIsAdmin(sessionData.user.user_metadata.role === 'admin');
+                }
+            } catch (error) {
+                console.error('Error fetching session:', error);
+            }
+        };
+        fetchSession();
+    }, []);
+    const handleClickLogout = async () => {
+        try {
+            await signOut();
+            setIsLogin(false);
+            if (isAdmin === 'admin') setIsAdmin(false);
+            router.push('/');
+            router.refresh();
+        } catch (error) {
+            if (error instanceof Error) console.error(error.message);
+        }
+    };
     return (
         <NavigationMenu>
             <NavigationMenuList>
-                {/* <NavigationMenuItem>
-                    <NavigationMenuTrigger>SHOP</NavigationMenuTrigger>
-                    <NavigationMenuContent>
-                        <ul className="grid w-[400px] gap-3 p-4 md:w-[500px] md:grid-cols-2 lg:w-[600px] ">
-                            {components.map((component) => (
-                                <ListItem key={component.title} title={component.title} href={component.href}>
-                                    {component.description}
-                                </ListItem>
-                            ))}
-                        </ul>
-                    </NavigationMenuContent>
-                </NavigationMenuItem> */}
                 <NavigationMenuItem>
                     <Link href="/" legacyBehavior passHref>
                         <NavigationMenuLink className={navigationMenuTriggerStyle()}>홈</NavigationMenuLink>
                     </Link>
-                    <Link href="/signIn" legacyBehavior passHref>
-                        <NavigationMenuLink className={navigationMenuTriggerStyle()}>로그인</NavigationMenuLink>
-                    </Link>
-                    <Link href="/signUp" legacyBehavior passHref>
-                        <NavigationMenuLink className={navigationMenuTriggerStyle()}>회원가입</NavigationMenuLink>
-                    </Link>
+                    {isLogin ? (
+                        <>
+                            <Link href="/signIn" legacyBehavior passHref>
+                                <NavigationMenuLink
+                                    className={navigationMenuTriggerStyle()}
+                                    onClick={handleClickLogout}>
+                                    로그아웃
+                                </NavigationMenuLink>
+                            </Link>
+                            {isAdmin && (
+                                <Link href="/admin" legacyBehavior passHref>
+                                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                                        관리자 메뉴
+                                    </NavigationMenuLink>
+                                </Link>
+                            )}
+                        </>
+                    ) : (
+                        <>
+                            <Link href="/signIn" legacyBehavior passHref>
+                                <NavigationMenuLink className={navigationMenuTriggerStyle()}>로그인</NavigationMenuLink>
+                            </Link>
+                            <Link href="/signUp" legacyBehavior passHref>
+                                <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                                    회원가입
+                                </NavigationMenuLink>
+                            </Link>
+                        </>
+                    )}
                 </NavigationMenuItem>
             </NavigationMenuList>
         </NavigationMenu>

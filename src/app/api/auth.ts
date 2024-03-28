@@ -1,4 +1,3 @@
-import { SigninRegisterInput } from '@/components/auth/SignInFrom';
 import { RegisterInput } from '@/components/auth/SignUpForm';
 import { UserUpdateType } from '@/lib/supabase/database.types';
 import { supabase } from '@/lib/supabase/supabase';
@@ -36,8 +35,41 @@ export const userUpdate = async (user: UserUpdateType) => {
     if (error !== null) throw new Error(error.message);
 };
 
-export const signInUser = async (values: SigninRegisterInput) => {
-    const { data, error } = await supabase.auth.signInWithPassword(values);
-    console.log('로그인');
+export const signInUser = async ({ email, password }: { email: string; password: string }) => {
+    const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password
+    });
     if (error !== null) throw new Error(error.message);
+};
+
+export const signOut = async () => {
+    await supabase.auth.signOut();
+};
+// export const getUser = async (email: string | undefined) => {
+//     const { data } = await supabase.from('users').select().eq('email', email).single();
+//     return data;
+// };
+
+export const getAuthSession = async () => {
+    const {
+        data: { session },
+        error
+    } = await supabase.auth.getSession();
+    if (!session) {
+        console.log('로그인 상태가 아님');
+    }
+    if (session) {
+        console.log(session?.user.email as string);
+        console.log(session?.user.id as string);
+    }
+    console.log('데이터', session, '에러', error);
+    return session;
+};
+
+export const getUser = async () => {
+    // const {
+    //     data: { user }
+    // } = await supabase.auth.getUser();
+    // return user;
 };
