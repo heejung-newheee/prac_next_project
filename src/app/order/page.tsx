@@ -4,10 +4,10 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { UserUpdateType } from '@/lib/supabase/database.types';
 import type { Session } from '@supabase/auth-helpers-nextjs';
 import { useSearchParams } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { Suspense, useEffect, useState } from 'react';
 import { getAuthSession, getUser } from '../api/auth';
 
-export default function Order() {
+function Order() {
     const searchParams = useSearchParams();
     const category = searchParams.get('category');
     const id = searchParams.get('id');
@@ -42,18 +42,19 @@ export default function Order() {
                 <CardHeader>
                     <CardTitle>주문 상품 정보</CardTitle>
                 </CardHeader>
-                <div className="flex flex-wrap">
-                    <div>{images ? <img src={images} alt="" className="w-[120px]" /> : '이미지가 없음'}</div>
-                    <div>
-                        <p className="text-xs text-gray-300">{category}</p>
-                        <p>{product_name}</p>
-                        <p className="text-lg font-bold">
-                            {price}
-                            <span className="text-sm">원</span>
-                        </p>
+                <CardContent>
+                    <div className="flex flex-wrap">
+                        <div>{images ? <img src={images} alt="" className="w-[120px]" /> : '이미지가 없음'}</div>
+                        <div>
+                            <p className="text-xs text-gray-300">{category}</p>
+                            <p>{product_name}</p>
+                            <p className="text-lg font-bold">
+                                {price}
+                                <span className="text-sm">원</span>
+                            </p>
+                        </div>
                     </div>
-                </div>
-                <CardContent></CardContent>
+                </CardContent>
             </Card>
             {/* 주문자 정보 */}
             <Card className="w-[500px] m-2 p-2">
@@ -86,5 +87,12 @@ export default function Order() {
                 </CardFooter>
             </Card>
         </main>
+    );
+}
+export default function OrderPage() {
+    return (
+        <Suspense>
+            <Order />
+        </Suspense>
     );
 }
