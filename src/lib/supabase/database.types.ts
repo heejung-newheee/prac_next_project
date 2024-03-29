@@ -70,7 +70,7 @@ export type Database = {
                     address: string | null;
                     created_at: string;
                     email: string | null;
-                    id: string;
+                    id: string | undefined;
                     name: string;
                     phone: string | null;
                     role: string | null;
@@ -79,7 +79,7 @@ export type Database = {
                     address?: string | null;
                     created_at?: string;
                     email?: string | null;
-                    id: string;
+                    id: string | undefined;
                     name: string;
                     phone?: string | null;
                     role?: string | null;
@@ -88,7 +88,7 @@ export type Database = {
                     address?: string | null;
                     created_at?: string;
                     email?: string | null;
-                    id?: string;
+                    id?: string | undefined;
                     name?: string;
                     phone?: string | null;
                     role?: string | null;
