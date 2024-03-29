@@ -1,19 +1,13 @@
 'use client';
+import ProductInfo from '@/components/orderInfo/ProductInfo';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { UserUpdateType } from '@/lib/supabase/database.types';
 import type { Session } from '@supabase/auth-helpers-nextjs';
-import { useSearchParams } from 'next/navigation';
 import { Suspense, useEffect, useState } from 'react';
 import { getAuthSession, getUser } from '../api/auth';
 
-function Order() {
-    const searchParams = useSearchParams();
-    const category = searchParams.get('category');
-    const id = searchParams.get('id');
-    const images = searchParams.get('images');
-    const price = searchParams.get('price');
-    const product_name = searchParams.get('product_name');
+export default function Order() {
     const [user, setUser] = useState<UserUpdateType | null>(null);
     const [session, setSession] = useState<Session | null>(null);
     useEffect(() => {
@@ -38,24 +32,9 @@ function Order() {
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
             <h2>주문 페이지</h2>
             {/* 상품정보 */}
-            <Card className="w-[500px] m-2 p-2">
-                <CardHeader>
-                    <CardTitle>주문 상품 정보</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="flex flex-wrap">
-                        <div>{images ? <img src={images} alt="" className="w-[120px]" /> : '이미지가 없음'}</div>
-                        <div>
-                            <p className="text-xs text-gray-300">{category}</p>
-                            <p>{product_name}</p>
-                            <p className="text-lg font-bold">
-                                {price}
-                                <span className="text-sm">원</span>
-                            </p>
-                        </div>
-                    </div>
-                </CardContent>
-            </Card>
+            <Suspense>
+                <ProductInfo />
+            </Suspense>
             {/* 주문자 정보 */}
             <Card className="w-[500px] m-2 p-2">
                 <CardHeader>
@@ -87,12 +66,5 @@ function Order() {
                 </CardFooter>
             </Card>
         </main>
-    );
-}
-export default function OrderPage() {
-    return (
-        <Suspense>
-            <Order />
-        </Suspense>
     );
 }

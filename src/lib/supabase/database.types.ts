@@ -3,6 +3,38 @@ export type Json = string | number | boolean | null | { [key: string]: Json | un
 export type Database = {
     public: {
         Tables: {
+            point: {
+                Row: {
+                    created_at: string;
+                    history: string | null;
+                    id: string;
+                    point: number | null;
+                    user_id: string | null;
+                };
+                Insert: {
+                    created_at?: string;
+                    history?: string | null;
+                    id?: string;
+                    point?: number | null;
+                    user_id?: string | null;
+                };
+                Update: {
+                    created_at?: string;
+                    history?: string | null;
+                    id?: string;
+                    point?: number | null;
+                    user_id?: string | null;
+                };
+                Relationships: [
+                    {
+                        foreignKeyName: 'public_point_user_id_fkey';
+                        columns: ['user_id'];
+                        isOneToOne: false;
+                        referencedRelation: 'users';
+                        referencedColumns: ['id'];
+                    }
+                ];
+            };
             products: {
                 Row: {
                     category: string | null;
@@ -35,30 +67,41 @@ export type Database = {
             };
             users: {
                 Row: {
+                    address: string | null;
                     created_at: string;
                     email: string | null;
-                    id: string | null;
+                    id: string;
                     name: string;
                     phone: string | null;
                     role: string | null;
                 };
                 Insert: {
+                    address?: string | null;
                     created_at?: string;
                     email?: string | null;
-                    id?: string | null;
+                    id: string;
                     name: string;
                     phone?: string | null;
                     role?: string | null;
                 };
                 Update: {
+                    address?: string | null;
                     created_at?: string;
                     email?: string | null;
-                    id?: string | null;
+                    id?: string;
                     name?: string;
                     phone?: string | null;
                     role?: string | null;
                 };
-                Relationships: [];
+                Relationships: [
+                    {
+                        foreignKeyName: 'public_users_id_fkey';
+                        columns: ['id'];
+                        isOneToOne: true;
+                        referencedRelation: 'users';
+                        referencedColumns: ['id'];
+                    }
+                ];
             };
         };
         Views: {

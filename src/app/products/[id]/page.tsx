@@ -30,9 +30,9 @@ export default function ProductDetail(props: ProductDetailProps) {
         };
         fetchData();
     }, [props.params.id]); // props.params.id가 변경될 때마다 다시 호출
-    const onClickBuy = (id: string) => {
-        router.push(`/order`);
-    };
+    // const onClickBuy = (id: string) => {
+    //     router.push(`/order`);
+    // };
     console.log(productData);
     return (
         <main className="flex min-h-screen flex-col items-center justify-between p-24">
