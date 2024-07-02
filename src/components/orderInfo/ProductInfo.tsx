@@ -13,7 +13,7 @@ const ProductInfo = () => {
                 <CardTitle>주문 상품 정보</CardTitle>
             </CardHeader>
             <CardContent>
-                <div className="flex flex-wrap">
+                <div className="flex flex-wrap gap-5">
                     <div>{images ? <img src={images} alt="" className="w-[120px]" /> : '이미지가 없음'}</div>
                     <div>
                         <p className="text-xs text-gray-300">{category}</p>

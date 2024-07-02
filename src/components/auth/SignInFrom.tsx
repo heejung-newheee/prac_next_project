@@ -17,10 +17,16 @@ export default function SignInFrom() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const handleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
-        if (e.target.name === 'email') {
-            setEmail(e.target.value);
-        } else if (e.target.name === 'password') {
-            setPassword(e.target.value);
+        // if (e.target.name === 'email') {
+        //     setEmail(e.target.value);
+        // } else if (e.target.name === 'password') {
+        //     setPassword(e.target.value);
+        // }
+        const { name, value } = e.target;
+        if (name === 'email') {
+            setEmail(value);
+        } else if (name === 'password') {
+            setPassword(value);
         }
     };
     // TODO 로그인시 NAV 리렌더링
@@ -28,9 +34,9 @@ export default function SignInFrom() {
         e.preventDefault();
         try {
             await signInUser({ email, password });
+            console.log('onSubmit called', email, password);
             router.push('/');
             router.refresh();
-            console.log('onSubmit called', email, password);
         } catch (error) {
             if (error instanceof Error) console.error(error.message);
             alert('계정정보를 확인해 주세요');

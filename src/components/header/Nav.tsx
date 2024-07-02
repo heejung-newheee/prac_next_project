@@ -37,21 +37,32 @@ export default function Nav() {
             try {
                 const sessionData = await getAuthSession();
                 if (sessionData) {
+                    console.log('fetchSession called', sessionData);
                     setSession(sessionData);
                     setIsLogin(true);
                     setIsAdmin(sessionData.user.user_metadata.role === 'admin');
+                } else {
+                    setSession(null);
+                    setIsLogin(false);
+                    setIsAdmin(false);
                 }
             } catch (error) {
                 console.error('Error fetching session:', error);
+                setSession(null);
+                setIsLogin(false);
+                setIsAdmin(false);
             }
         };
         fetchSession();
+        console.log('isLogin', isLogin);
     }, []);
     const handleClickLogout = async () => {
         try {
             await signOut();
+            setSession(null);
             setIsLogin(false);
-            if (isAdmin === 'admin') setIsAdmin(false);
+            setIsLogin(false);
+            // if (isAdmin === 'admin') setIsAdmin(false);
             router.push('/');
             router.refresh();
         } catch (error) {
@@ -67,13 +78,11 @@ export default function Nav() {
                     </Link>
                     {isLogin ? (
                         <>
-                            <Link href="/signIn" legacyBehavior passHref>
-                                <NavigationMenuLink
-                                    className={navigationMenuTriggerStyle()}
-                                    onClick={handleClickLogout}>
-                                    로그아웃
-                                </NavigationMenuLink>
-                            </Link>
+                            {/* <Link href="/signIn" legacyBehavior passHref> */}
+                            <NavigationMenuLink className={navigationMenuTriggerStyle()} onClick={handleClickLogout}>
+                                로그아웃
+                            </NavigationMenuLink>
+                            {/* </Link> */}
                             {isAdmin && (
                                 <Link href="/admin" legacyBehavior passHref>
                                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>

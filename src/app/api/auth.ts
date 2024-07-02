@@ -1,6 +1,7 @@
 import { RegisterInput } from '@/components/auth/SignUpForm';
 import { UserUpdateType } from '@/lib/supabase/database.types';
 import { supabase } from '@/lib/supabase/supabase';
+import { Session } from '@supabase/supabase-js';
 
 export const signUpUser = async (values: RegisterInput) => {
     const { name, email, phone, role, password } = values;
@@ -61,20 +62,20 @@ export const getAuthSession = async () => {
 
     return session;
 };
-export const getUser = async (email: string) => {
-    const { data } = await supabase.from('users').select().eq('email', email).single();
-    return data;
-};
-
-// export const getUser = async (session: Session | null) => {
-//     try {
-//         if (session) {
-//             const {
-//                 data: { user }
-//             } = await supabase.auth.getUser(session.user.email);
-//             return user;
-//         }
-//     } catch (error) {
-//         console.error(error);
-//     }
+// export const getUser = async (email: string) => {
+//     const { data } = await supabase.from('users').select().eq('email', email).single();
+//     return data;
 // };
+
+export const getUser = async (session: Session | null) => {
+    try {
+        if (session) {
+            const {
+                data: { user }
+            } = await supabase.auth.getUser(session.user.email);
+            return user;
+        }
+    } catch (error) {
+        console.error(error);
+    }
+};
