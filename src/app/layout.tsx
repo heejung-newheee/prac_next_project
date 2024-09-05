@@ -5,6 +5,7 @@ import Nav from '@/components/header/Nav';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import './globals.css';
+import LangSwitch from '@/components/header/LangSwitch';
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -23,6 +24,7 @@ export default function RootLayout({
             <body className={inter.className}>
                 <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
                     <Nav />
+                    <LangSwitch />
                     <ModeToggle />
                     {children}
                     {/* <Toaster /> */}

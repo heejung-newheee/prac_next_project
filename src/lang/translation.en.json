@@ -1,0 +1,43 @@
+{
+    "common": {
+        "button": {
+            "change": "Change Language",
+            "reset": "Reset",
+            "next": "Next",
+            "pre": "Previous",
+            "required": "Required",
+            "modify": "Edit",
+            "edit": "Edit",
+            "delete": "Delete",
+            "download": "Download",
+            "all_dowunload": "Download All",
+            "add_tag": "Add tags",
+            "approval": "Approval",
+            "reject": "Reject",
+            "look_up": "View",
+            "search": "Search",
+            "ok": "OK",
+            "more": "More",
+            "login": "Login",
+            "findPassword": "Reset Password",
+            "cancel": "Cancel",
+            "submit": "Send",
+            "logout": "Logout",
+            "history": "Order History",
+            "passwordChange": "Change Password",
+            "quota": "Quota",
+            "Ko": "Korean",
+            "En": "English",
+            "addCart": "Add to cart",
+            "ContinueShopping": "Continue shopping",
+            "cartCheck": "Go to cart",
+            "selectDelete": "Delete",
+            "deleteSoldOut": "Delete all sold-out items",
+            "payment": "Proceed to checkout",
+            "purchaseHistory": "Go to Order History",
+            "ReturnCart": "Return to cart",
+            "terms": "Terms of Service",
+            "privacyPolicy": "Privacy Policy"
+        }
+    }
+}
